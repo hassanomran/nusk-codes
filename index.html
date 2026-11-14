@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>أكواد نسك — نسخ سريع</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0f1f1a;
+      --bg2: #163028;
+      --panel: #1a3a30;
+      --line: #2d5a4a;
+      --text: #e8f5ef;
+      --muted: #9bb5aa;
+      --accent: #2db88a;
+      --accent-hover: #3fd4a0;
+      --warn: #e8b84a;
+      --used: #5a7368;
+      --danger: #d46a6a;
+      --radius: 14px;
+      --shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "IBM Plex Sans Arabic", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 600px at 80% -10%, rgba(45, 184, 138, 0.18), transparent 60%),
+        radial-gradient(900px 500px at -10% 100%, rgba(232, 184, 74, 0.08), transparent 55%),
+        linear-gradient(160deg, var(--bg), var(--bg2));
+    }
+
+    .wrap {
+      width: min(920px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 1.5rem 0 4rem;
+    }
+
+    header {
+      margin-bottom: 1.25rem;
+    }
+
+    header h1 {
+      margin: 0 0 0.35rem;
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    header p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin: 1rem 0 1.25rem;
+    }
+
+    .stat {
+      background: rgba(26, 58, 48, 0.75);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.35rem 0.85rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .stat strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .panel {
+      background: rgba(26, 58, 48, 0.72);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0.75rem;
+      margin-bottom: 0.85rem;
+    }
+
+    @media (max-width: 640px) {
+      .toolbar { grid-template-columns: 1fr; }
+    }
+
+    input[type="search"] {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: rgba(15, 31, 26, 0.7);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 0.8rem 1rem;
+      font: inherit;
+      outline: none;
+    }
+
+    input[type="search"]:focus {
+      border-color: var(--accent);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    button {
+      font: inherit;
+      border: 0;
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform 0.12s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:active { transform: scale(0.98); }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #06271c;
+    }
+    .btn-primary:hover:not(:disabled) { background: var(--accent-hover); }
+
+    .btn-secondary {
+      background: rgba(15, 31, 26, 0.85);
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .btn-warn {
+      background: rgba(232, 184, 74, 0.18);
+      color: var(--warn);
+      border: 1px solid rgba(232, 184, 74, 0.35);
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin: 0 0 0.85rem;
+      line-height: 1.5;
+    }
+
+    .current {
+      display: grid;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border-radius: 12px;
+      background: rgba(15, 31, 26, 0.55);
+      border: 1px dashed var(--line);
+    }
+
+    .current-code {
+      font-size: clamp(1.35rem, 5vw, 1.9rem);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      word-break: break-all;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .current-meta {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .current-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .list {
+      display: grid;
+      gap: 0.45rem;
+      max-height: min(58vh, 620px);
+      overflow: auto;
+      padding-left: 0.15rem;
+      scrollbar-color: var(--line) transparent;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 0.75rem;
+      border-radius: 10px;
+      background: rgba(15, 31, 26, 0.45);
+      border: 1px solid transparent;
+    }
+
+    .row.active {
+      border-color: var(--accent);
+      background: rgba(45, 184, 138, 0.12);
+    }
+
+    .row.used {
+      opacity: 0.55;
+    }
+
+    .row.used .code {
+      color: var(--used);
+      text-decoration: line-through;
+    }
+
+    .code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.95rem;
+      letter-spacing: 0.03em;
+    }
+
+    .row button {
+      padding: 0.45rem 0.75rem;
+      font-size: 0.85rem;
+      border-radius: 9px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 1.25rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(120%);
+      background: #12352b;
+      border: 1px solid var(--accent);
+      color: var(--text);
+      padding: 0.7rem 1.1rem;
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      transition: transform 0.2s ease;
+      z-index: 20;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 2rem 1rem;
+    }
+
+    .load-fallback {
+      margin-top: 0.75rem;
+      display: none;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .load-fallback.show { display: flex; }
+
+    footer {
+      margin-top: 1rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>أكواد نسك — نسخ سريع</h1>
+      <p>
+        انسخ الكود، افتح تطبيق نسك → ابدأ التحدي → المفاتيح → الصق → تحقق من الرمز.
+        الصفحة بتساعدك تنسخ بسرعة فقط — من غير أتمتة على التطبيق.
+      </p>
+    </header>
+
+    <div class="stats">
+      <div class="stat">الإجمالي: <strong id="statTotal">0</strong></div>
+      <div class="stat">المتبقي: <strong id="statLeft">0</strong></div>
+      <div class="stat">تم نسخه: <strong id="statUsed">0</strong></div>
+      <div class="stat">المعروض: <strong id="statShown">0</strong></div>
+    </div>
+
+    <section class="panel">
+      <div class="toolbar">
+        <input id="search" type="search" placeholder="ابحث عن كود…" autocomplete="off" />
+        <div class="actions">
+          <button type="button" class="btn-secondary" id="btnHideUsed">إخفاء المنسوخ</button>
+          <button type="button" class="btn-warn" id="btnReset">مسح التتبع</button>
+        </div>
+      </div>
+
+      <p class="hint">
+        زر «انسخ التالي» بينسخ الكود الحالي ويحوّلك للتالي تلقائيًا — مناسب للإدخال اليدوي السريع.
+      </p>
+
+      <div class="current" id="currentBox">
+        <div class="current-code" id="currentCode">—</div>
+        <div class="current-meta" id="currentMeta">جاري التحميل…</div>
+        <div class="current-actions">
+          <button type="button" class="btn-primary" id="btnCopyNext">انسخ التالي</button>
+          <button type="button" class="btn-secondary" id="btnCopyOnly">نسخ فقط</button>
+          <button type="button" class="btn-secondary" id="btnSkip">تخطي</button>
+          <button type="button" class="btn-secondary" id="btnMarkUsed">علّم كمستخدم</button>
+        </div>
+      </div>
+
+      <div class="load-fallback" id="loadFallback">
+        <span>تعذّر تحميل الأكواد تلقائيًا. اختر ملف <code>nusuk-codes.txt</code>:</span>
+        <input type="file" id="fileInput" accept=".txt,text/plain" />
+      </div>
+
+      <div class="list" id="list" aria-live="polite"></div>
+      <div class="empty" id="empty" hidden>لا توجد أكواد مطابقة.</div>
+    </section>
+
+    <footer>
+      للاستخدام الشخصي مع إدخال يدوي في تطبيق نسك الرسمي. بعض الأكواد قد تكون مستخدمة مسبقًا بينك وبين صاحب الكود.
+    </footer>
+  </div>
+
+  <div class="toast" id="toast" role="status">تم النسخ</div>
+
+  <script src="codes-data.js"></script>
+  <script>
+    const STORAGE_KEY = "nusuk_copied_codes_v1";
+    const PAGE_SIZE = 80;
+
+    const els = {
+      list: document.getElementById("list"),
+      empty: document.getElementById("empty"),
+      search: document.getElementById("search"),
+      currentCode: document.getElementById("currentCode"),
+      currentMeta: document.getElementById("currentMeta"),
+      btnCopyNext: document.getElementById("btnCopyNext"),
+      btnCopyOnly: document.getElementById("btnCopyOnly"),
+      btnSkip: document.getElementById("btnSkip"),
+      btnMarkUsed: document.getElementById("btnMarkUsed"),
+      btnHideUsed: document.getElementById("btnHideUsed"),
+      btnReset: document.getElementById("btnReset"),
+      loadFallback: document.getElementById("loadFallback"),
+      fileInput: document.getElementById("fileInput"),
+      toast: document.getElementById("toast"),
+      statTotal: document.getElementById("statTotal"),
+      statLeft: document.getElementById("statLeft"),
+      statUsed: document.getElementById("statUsed"),
+      statShown: document.getElementById("statShown"),
+    };
+
+    let allCodes = [];
+    let filtered = [];
+    let cursor = 0;
+    let hideUsed = true;
+    let used = loadUsed();
+    let toastTimer = null;
+
+    function loadUsed() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        const arr = raw ? JSON.parse(raw) : [];
+        return new Set(Array.isArray(arr) ? arr : []);
+      } catch {
+        return new Set();
+      }
+    }
+
+    function saveUsed() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify([...used]));
+    }
+
+    function showToast(msg) {
+      els.toast.textContent = msg;
+      els.toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => els.toast.classList.remove("show"), 1200);
+    }
+
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand("copy");
+        ta.remove();
+        return ok;
+      }
+    }
+
+    function parseCodesText(text) {
+      const set = new Set();
+      for (const line of text.split(/\r?\n/)) {
+        const m = line.trim().match(/^NG-[A-Za-z0-9]+$/i);
+        if (m) set.add(m[0]);
+      }
+      return [...set];
+    }
+
+    function rebuildFilter() {
+      const q = els.search.value.trim().toLowerCase();
+      filtered = allCodes.filter((code) => {
+        if (hideUsed && used.has(code)) return false;
+        if (q && !code.toLowerCase().includes(q)) return false;
+        return true;
+      });
+      if (cursor >= filtered.length) cursor = Math.max(0, filtered.length - 1);
+      updateStats();
+      renderCurrent();
+      renderList();
+    }
+
+    function updateStats() {
+      els.statTotal.textContent = allCodes.length.toLocaleString("ar-EG");
+      els.statUsed.textContent = used.size.toLocaleString("ar-EG");
+      els.statLeft.textContent = Math.max(0, allCodes.length - used.size).toLocaleString("ar-EG");
+      els.statShown.textContent = filtered.length.toLocaleString("ar-EG");
+      els.btnHideUsed.textContent = hideUsed ? "إظهار المنسوخ" : "إخفاء المنسوخ";
+    }
+
+    function renderCurrent() {
+      const code = filtered[cursor];
+      if (!code) {
+        els.currentCode.textContent = "—";
+        els.currentMeta.textContent = filtered.length ? "لا يوجد كود حالي" : "لا توجد أكواد للعرض";
+        els.btnCopyNext.disabled = true;
+        els.btnCopyOnly.disabled = true;
+        els.btnSkip.disabled = true;
+        els.btnMarkUsed.disabled = true;
+        return;
+      }
+      els.currentCode.textContent = code;
+      els.currentMeta.textContent = `الكود ${cursor + 1} من ${filtered.length}` + (used.has(code) ? " • منسوخ سابقًا" : "");
+      els.btnCopyNext.disabled = false;
+      els.btnCopyOnly.disabled = false;
+      els.btnSkip.disabled = false;
+      els.btnMarkUsed.disabled = false;
+    }
+
+    function renderList() {
+      const slice = filtered.slice(0, PAGE_SIZE);
+      els.list.innerHTML = "";
+      els.empty.hidden = slice.length > 0;
+
+      slice.forEach((code, i) => {
+        const row = document.createElement("div");
+        row.className = "row" + (i === cursor ? " active" : "") + (used.has(code) ? " used" : "");
+
+        const label = document.createElement("div");
+        label.className = "code";
+        label.textContent = code;
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "btn-secondary";
+        btn.textContent = used.has(code) ? "نسخ مرة أخرى" : "نسخ";
+        btn.addEventListener("click", async () => {
+          cursor = i;
+          await copyAndMark(code, false);
+          renderCurrent();
+          renderList();
+        });
+
+        row.addEventListener("click", (e) => {
+          if (e.target === btn) return;
+          cursor = i;
+          renderCurrent();
+          renderList();
+        });
+
+        row.append(label, btn);
+        els.list.appendChild(row);
+      });
+
+      if (filtered.length > PAGE_SIZE) {
+        const more = document.createElement("div");
+        more.className = "empty";
+        more.textContent = `معروض أول ${PAGE_SIZE} من ${filtered.length}. استخدم البحث أو «انسخ التالي» للتنقل.`;
+        els.list.appendChild(more);
+      }
+    }
+
+    async function copyAndMark(code, advance) {
+      const ok = await copyText(code);
+      if (!ok) {
+        showToast("تعذّر النسخ");
+        return;
+      }
+      used.add(code);
+      saveUsed();
+      showToast(`تم نسخ ${code}`);
+      if (advance) {
+        if (hideUsed) {
+          rebuildFilter();
+        } else {
+          cursor = Math.min(cursor + 1, Math.max(0, filtered.length - 1));
+          updateStats();
+          renderCurrent();
+          renderList();
+        }
+      } else {
+        updateStats();
+        renderCurrent();
+        renderList();
+      }
+    }
+
+    function setCodes(codes) {
+      allCodes = codes;
+      cursor = 0;
+      rebuildFilter();
+    }
+
+    async function boot() {
+      if (Array.isArray(window.NUSUK_CODES) && window.NUSUK_CODES.length) {
+        setCodes(window.NUSUK_CODES.filter((c) => /^NG-[A-Za-z0-9]+$/i.test(c)));
+        return;
+      }
+
+      try {
+        const res = await fetch("nusuk-codes.txt");
+        if (!res.ok) throw new Error("fetch failed");
+        const text = await res.text();
+        setCodes(parseCodesText(text));
+      } catch {
+        els.currentMeta.textContent = "اختر ملف الأكواد للبدء";
+        els.loadFallback.classList.add("show");
+      }
+    }
+
+    els.search.addEventListener("input", () => {
+      cursor = 0;
+      rebuildFilter();
+    });
+
+    els.btnHideUsed.addEventListener("click", () => {
+      hideUsed = !hideUsed;
+      cursor = 0;
+      rebuildFilter();
+    });
+
+    els.btnReset.addEventListener("click", () => {
+      if (!confirm("مسح قائمة الأكواد المنسوخة من هذا المتصفح؟")) return;
+      used.clear();
+      saveUsed();
+      cursor = 0;
+      rebuildFilter();
+      showToast("تم مسح التتبع");
+    });
+
+    els.btnCopyNext.addEventListener("click", async () => {
+      const code = filtered[cursor];
+      if (!code) return;
+      await copyAndMark(code, true);
+    });
+
+    els.btnCopyOnly.addEventListener("click", async () => {
+      const code = filtered[cursor];
+      if (!code) return;
+      await copyAndMark(code, false);
+    });
+
+    els.btnSkip.addEventListener("click", () => {
+      if (!filtered.length) return;
+      cursor = Math.min(cursor + 1, filtered.length - 1);
+      renderCurrent();
+      renderList();
+    });
+
+    els.btnMarkUsed.addEventListener("click", () => {
+      const code = filtered[cursor];
+      if (!code) return;
+      used.add(code);
+      saveUsed();
+      if (hideUsed) rebuildFilter();
+      else {
+        updateStats();
+        renderCurrent();
+        renderList();
+      }
+      showToast("تم التعليم كمستخدم");
+    });
+
+    els.fileInput.addEventListener("change", async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const text = await file.text();
+      setCodes(parseCodesText(text));
+      els.loadFallback.classList.remove("show");
+      showToast(`تم تحميل ${allCodes.length} كود`);
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.target.matches("input, textarea")) return;
+      if (e.key === "Enter" || e.key === "c" || e.key === "C" || e.key === "ن") {
+        e.preventDefault();
+        els.btnCopyNext.click();
+      } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
+        e.preventDefault();
+        els.btnSkip.click();
+      }
+    });
+
+    boot();
+  </script>
+</body>
+</html>
